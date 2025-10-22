@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMeal(hideForm : ()-> Unit) {
+fun AddMeal(hideForm : ()-> Unit,
+            onMealAdded :(mealName : String , mealType: String)-> Unit ) {
     var oValue by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var selectedMealType by remember { mutableStateOf("") }
@@ -53,7 +54,7 @@ fun AddMeal(hideForm : ()-> Unit) {
                 modifier = Modifier.fillMaxWidth()
                     .menuAnchor()
                     .padding(start = 8.dp, end = 8.dp, top = 4.dp),
-                readOnly = true, // this will ensure that user just selects and dont types
+                readOnly = true, // this will ensure that user just selects and don't types
                 value = selectedMealType,
                 onValueChange = {},
                 label = { Text("Cooking Schedule") },
@@ -84,7 +85,12 @@ fun AddMeal(hideForm : ()-> Unit) {
                 Button(onClick = hideForm) {
                     Text("Cancel")
                 }
-                Button(onClick = { hideForm() }) {
+                Button(onClick = {
+                    if (oValue.isNotBlank() && selectedMealType.isNotBlank()){
+                        onMealAdded(oValue, selectedMealType)
+                        hideForm()
+                    }
+                }) {
                     Text("Save")
 
             }
