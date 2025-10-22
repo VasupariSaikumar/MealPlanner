@@ -76,7 +76,28 @@ fun RecipeScreen(){
                 }
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(meals){meal ->
-                        RecipeList( meal = meal , onEditClick = {} , onDeleteClick = {})
+                        if (meal.isCooked){
+                            MealEditor(meal = meal,
+                                onEditComplete = {editName, editType ->
+                                    meals = meals.map {
+                                        if(it.id == meal.id){
+                                            it.copy(
+                                                mealName = editName ,
+                                                isCooked = false
+                                            )
+                                        }else{
+                                            it
+                                        }
+                                    }
+                                })
+                        }
+                        RecipeList( meal = meal , onEditClick = {
+                            meals = meals.map {
+                                it.copy(isCooked = it.id == meal.id)
+                            }
+                        } , onDeleteClick = {
+                            meals = meals -meal
+                        })
                     }
                 }
 
